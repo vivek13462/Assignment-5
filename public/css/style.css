@@ -1,0 +1,57 @@
+
+#userFormArea{
+margin-top: 32px;
+}
+
+
+.sidebar-nav {
+    position: fixed;
+    width: 180px;
+    left: 0;
+    bottom: 0;
+    top: 50px;
+    border:2px;
+    background: #ccc;
+    padding: 10px;
+    z-index: 10;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+
+}
+
+#mainArea{
+	display: none;
+  margin-left: 180px;
+  margin-bottom: 30px;
+}
+
+
+
+p{
+  float: center;
+  font-size: 24px; 
+}
+
+p.btn-info{
+  border:2px;
+}
+
+
+footer{
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+
+  
+}
+footer p{
+    color: #988d8d;
+  }
+
+.img_small
+ { width:250px;
+  height:170px;
+  margin: 20px; 
+}

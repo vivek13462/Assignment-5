@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+   
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/public/css/4-col-portfolio.css" rel="stylesheet">
+    <link href="/public/css/style.css" rel="stylesheet" type="text/css">
+    
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+
+
+
+    <title>Assignment-5</title>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
+    </script>
+    <style>
+    body {
+    background-color: lightgreen;
+}
+    </style>
+</head>
+
+
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+           
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+
+    </nav>
+    <!-- User Form Content -->
+    <div class="container">
+        <div id="userFormArea" class="row text-center">
+            <div class="col-lg-12">
+            <h2 class="ui teal image header">
+                <div class="content">
+                    PLAY TRIVIA GAME
+                </div>
+            </h2>
+            <form  id ='userForm'>
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" id='username' placeholder="username">
+                        </div>
+                    </div>
+                    <p></p>
+                    <input type="submit" class="ui fluid large teal submit button" id="" value="login" />
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="container" id='mainArea'>
+        <!-- Page Heading -->
+        <div class="row">
+            <!--<div class="col-lg-12">-->
+               
+                
+        <!-- /.row -->
+        <hr/>
+
+         <!-- Online user Row -->
+        <div class="sidebar-nav">
+         
+         Online Users:：
+            <div class='row'>
+            <div class='col-md-10' id='userList'>
+            </div>
+            </div>
+        </div>
+        
+
+<marquee bgcolor="black"><font color="red">Play Trivia Game</font></marquee>
+    <form id="game_form">
+        
+        <a href="#" id="score_btn" style="display:none">Your Score</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+       <div id="scoreDivBtnId"><div id="scoreBtnId" name="score">Current Score:
+                <textarea id="rightAns"></textarea>
+                <textarea id="wrongAns"></textarea></div>
+        
+        
+
+        
+   <div id="displayQueId">
+            <input type="hidden" id="askedQueId">
+            <input type="hidden" id="askedQueAns">
+            <input type="hidden" id="currentUserId">
+            <div id="allQueId" class="btn">
+                <div  style="margin-top:60px">Question </div>
+                <textarea style="height:50px; width:300px;" id="queId"></textarea><br> 
+                <div>Answer </div>
+                <textarea style="height:50px; width:300px;" id="ansId"></textarea><br> 
+                <input type="button" value="I am Sure" id="sendBtnId">
+                <input type="button" value="Next Round" id="next_round"><br>
+            </div>
+        </div>
+<hr>
+<b><i>FOR NEW DATA</i></b>
+<div id="addQueDivId">
+            <div>ADD a question</div><textarea id="questionId"></textarea><br>
+            <div>Fix the Answer</div><textarea id="answerId"></textarea><br>
+            <input id="submit_Id" type="button" value="Submit"><br>
+        </div>
+
+
+    </form>
+       
+
+        
+      
+
+    </div>
+
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/public/javascripts/bootstrap.min.js"></script>
+
+    <!-- appjs -->
+    <script src="/public/javascripts/app.js"></script>
+
+<script>
+    $('#next_round').on('click', function(){
+       
+        other_level();
+    });
+
+  var other_level = function(){
+
+    'use strict';
+
+    var url = "question";
+    $.ajax({
+        method: "GET",
+        url: "http://localhost:3000/" + url,
+        crossDomain: true,
+        dataType: "json",
+    }).done(function(msg) {
+        if (msg.answer === false) {
+            msg.answer = "false";
+        }
+       
+    });
+};
+  
+
+   
+
+var getQuestions = function(){
+    'use strict';
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
+        url: 
+        'http://localhost:3000/question',            
+        success: function(data) {
+            console.log('success');
+            $('.span').html(data.newQuestion._id);
+            console.log($('.span').text()); 
+        }
+    });
+};
+ 
+
+
+     $("#submit_Id").on('click' ,function(){
+    
+        add_new_Question();
+        alert("DATA SAVED SUCCESSFULLY");
+       $('#questionId').val(''); 
+       $('#answerId').val('');
+    });
+
+
+var add_new_Question = function(){
+
+    'use strict';
+
+    var url = "question";
+    var question = $("#questionId").val();
+    var answer = $("#answerId").val();
+    var data = {
+        "question": question,
+        "answer": answer
+    };
+    var dataJSON = JSON.stringify(data);
+    console.log(dataJSON);
+    $.ajax({
+        method: "POST",
+        url: "http://localhost:3000/" + url,
+        crossDomain: true,
+        dataType: "json",
+        data: data
+    }).done(function(msg) {
+        if (msg.answer === false) {
+            msg.answer = "false";
+        }
+        $("#displayQueId").show();
+        $("#addQueBtnId").show();
+        
+        $("#userNameId").hide();
+    });
+};
+   
+
+
+
+   jQuery(function($){
+var socket = io.connect();
+ socket.on('newQue', function(question){
+  
+        $('#queId').val(question.question);
+        $('#askedQueId').val(question._id);
+        $('#askedQueAns').val(question.answer);
+        
+    });
+
+   socket.on('score', function(data){
+    //alert('hhhh');
+        $('#rightAns').val(data.right);
+        $('#wrongAns').val(data.wrong);
+        console.log($('#currentUserId').val());
+        if(data.flag == 1){
+            if($('#currentUserId').val() == $('#'+userName+'').text()) {
+                $('#'+userName+'').css("color","#33D166");
+            }
+        }
+        if(data.flag == 0){
+            if($('#currentUserId').val() == $('#'+userName+'').text()) {
+                $('#'+userName+'').css("color","#F1492A");
+        }
+        }
+    });
+
+$('#sendBtnId').on('click', function(){
+        console.log($('#ansId').val());
+        console.log("Question ::::: ",$('#askedQueId').val());
+        socket.emit('score', { questionId : $('#askedQueId').val(), givenAns : $('#ansId').val(), actualAns : $('#askedQueAns').val()});
+    });
+
+});      
+  
+
+    </script> 
+
+
+</body>
+
+</html>
